@@ -11,6 +11,19 @@ A stack heap flexible string designed to improve performance.
 
 For more details, please read the crate [documentation].
 
+## Examples
+
+You can use `FlexibleString` almost as well as standard `String`.
+
+```rust
+use flexible_string::FlexibleString;
+
+let mut string = FlexibleString::<250>::from("hello");
+string.push(',');
+string.push_str("world");
+assert_eq!(string, "hello,world");
+```
+
 ## Benchmarks
 
 Run `cargo +nightly bench` in the root directory of this repository for benchmarking.
