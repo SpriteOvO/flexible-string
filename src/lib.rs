@@ -10,6 +10,10 @@
 //! (see [benchmarks of spdlog-rs]). Now it is extracted to a separate crate for
 //! use by other crates.
 //!
+//! # Benchmarks
+//!
+//! See [section Benchmarks] of the README for this repository.
+//!
 //! # Examples
 //!
 //! ```
@@ -23,6 +27,7 @@
 //!
 //! [spdlog-rs]: https://crates.io/crates/spdlog-rs
 //! [benchmarks of spdlog-rs]: https://github.com/SpriteOvO/spdlog-rs#benchmarks
+//! [section Benchmarks]: https://github.com/SpriteOvO/flexible-string#benchmarks
 
 #![warn(missing_docs)]
 
