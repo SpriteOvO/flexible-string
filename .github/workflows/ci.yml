@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check formatting
+      run: cargo fmt --all -- --check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run tests
+      run: cargo test --verbose
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install nightly
+      run: |
+        rustup toolchain install nightly
+        rustup component add clippy --toolchain nightly
+    - name: Run clippy
+      run: cargo +nightly clippy --tests --benches
