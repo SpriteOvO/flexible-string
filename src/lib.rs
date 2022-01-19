@@ -84,8 +84,8 @@ pub struct FromUtf8Error {
 ///
 /// It provides APIs that are as consistent as possible with `String`, but
 /// some APIs are not yet implemented or cannot be implemented. For implemented
-/// methods, the documentation and examples of standard `String` apply to it as
-/// well.
+/// methods, the documentation and examples of standard `String` apply to them
+/// as well.
 #[derive(Clone)]
 pub struct FlexibleString<const CAPACITY: usize>(FlexibleStringInner<CAPACITY>);
 
