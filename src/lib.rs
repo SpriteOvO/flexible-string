@@ -1,3 +1,31 @@
+//! A stack heap flexible string designed to improve performance.
+//!
+//! [`FlexibleString`] has a fixed stack buffer of the given bytes, and
+//! automatically upgrades to [`String`] when more space is needed. It provides
+//! APIs that are as consistent as possible with [`String`], but some APIs are
+//! not yet implemented or cannot be implemented.
+//!
+//! [`FlexibleString`] was first implemented in [spdlog-rs] crate, which
+//! improved performance for [spdlog-rs] by about double
+//! (see [benchmarks of spdlog-rs]). Now it is extracted to a separate crate for
+//! use by other crates.
+//!
+//! # Examples
+//!
+//! ```
+//! use flexible_string::FlexibleString;
+//!
+//! let mut string = FlexibleString::<250>::from("hello");
+//! string.push(',');
+//! string.push_str("world");
+//! assert_eq!(string, "hello,world");
+//! ```
+//!
+//! [spdlog-rs]: https://crates.io/crates/spdlog-rs
+//! [benchmarks of spdlog-rs]: https://github.com/SpriteOvO/spdlog-rs#benchmarks
+
+#![warn(missing_docs)]
+
 use std::{ffi::OsStr, fmt, mem::MaybeUninit, ops, ptr, slice, str, string};
 
 // The following implementations are referenced from :
@@ -45,8 +73,14 @@ pub struct FromUtf8Error {
     error: str::Utf8Error,
 }
 
-/// A flexible string, which first uses a `CAPACITY` sized stack buffer and
-/// switches to a heap buffer when more space is needed.
+/// A stack heap flexible string, which first uses a fixed size stack buffer of
+/// `CAPACITY` bytes and automatically upgrades to a heap buffer (`String`)
+/// when more space is needed.
+///
+/// It provides APIs that are as consistent as possible with `String`, but
+/// some APIs are not yet implemented or cannot be implemented. For implemented
+/// methods, the documentation and examples of standard `String` apply to it as
+/// well.
 #[derive(Clone)]
 pub struct FlexibleString<const CAPACITY: usize>(FlexibleStringInner<CAPACITY>);
 
