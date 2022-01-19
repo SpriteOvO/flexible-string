@@ -184,7 +184,7 @@ impl<const CAPACITY: usize> FlexibleString<CAPACITY> {
                 .map(|s| Self(FlexibleStringInner::Heap(s)))
                 .map_err(|err| err.into())
         } else {
-            unsafe { StackString::from_utf8_only_len_unchecked(vec) }
+            unsafe { StackString::from_utf8_vec_only_len_unchecked(vec) }
                 .map(|s| Self(FlexibleStringInner::Stack(s)))
         }
     }
@@ -236,7 +236,7 @@ impl<const CAPACITY: usize> FlexibleString<CAPACITY> {
             )))
         } else {
             Self(FlexibleStringInner::Stack(
-                StackString::from_utf8_unchecked(bytes),
+                StackString::from_utf8_slice_unchecked(&bytes),
             ))
         }
     }
@@ -797,7 +797,17 @@ impl<const CAPACITY: usize> From<char> for FlexibleString<CAPACITY> {
 impl<const CAPACITY: usize> From<&str> for FlexibleString<CAPACITY> {
     #[inline]
     fn from(s: &str) -> Self {
-        unsafe { FlexibleString::from_utf8_unchecked(s.as_bytes().to_owned()) }
+        let bytes = s.as_bytes();
+        if bytes.len() > CAPACITY {
+            let owned_bytes = bytes.to_owned();
+            Self(FlexibleStringInner::Heap(unsafe {
+                String::from_utf8_unchecked(owned_bytes)
+            }))
+        } else {
+            Self(FlexibleStringInner::Stack(unsafe {
+                StackString::from_utf8_slice_unchecked(bytes)
+            }))
+        }
     }
 }
 
@@ -1019,9 +1029,9 @@ impl<const CAPACITY: usize> StackString<CAPACITY> {
     }
 
     #[inline]
-    unsafe fn from_utf8_only_len_unchecked(vec: Vec<u8>) -> Result<Self, FromUtf8Error> {
+    unsafe fn from_utf8_vec_only_len_unchecked(vec: Vec<u8>) -> Result<Self, FromUtf8Error> {
         match str::from_utf8(&vec) {
-            Ok(..) => Ok(Self::from_utf8_unchecked(vec)),
+            Ok(..) => Ok(Self::from_utf8_slice_unchecked(&vec)),
             Err(e) => Err(FromUtf8Error {
                 bytes: vec,
                 error: e,
@@ -1030,7 +1040,7 @@ impl<const CAPACITY: usize> StackString<CAPACITY> {
     }
 
     #[inline]
-    unsafe fn from_utf8_unchecked(bytes: Vec<u8>) -> Self {
+    unsafe fn from_utf8_slice_unchecked(bytes: &[u8]) -> Self {
         let mut res = Self::new();
         res.copy_append_unchecked(bytes.as_ptr(), bytes.len());
         res
