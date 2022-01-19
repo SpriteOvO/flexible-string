@@ -1,4 +1,9 @@
 # flexible-string
+
+[![](https://img.shields.io/crates/v/flexible-string?style=flat-square)](https://crates.io/crates/flexible-string)
+[![](https://img.shields.io/github/workflow/status/SpriteOvO/flexible-string/CI?style=flat-square)](https://github.com/SpriteOvO/flexible-string/actions/workflows/ci.yml)
+[![](https://img.shields.io/docsrs/flexible-string?style=flat-square)](https://docs.rs/flexible-string)
+[![](https://img.shields.io/crates/l/flexible-string?style=flat-square)](https://github.com/SpriteOvO/flexible-string#license)
  
 A stack heap flexible string designed to improve performance.
 
