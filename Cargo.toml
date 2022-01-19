@@ -2,5 +2,10 @@
 name = "flexible-string"
 version = "0.1.0"
 edition = "2021"
+description = "A stack heap flexible string designed to improve performance"
+repository = "https://github.com/SpriteOvO/flexible-string"
+license = "MIT OR Apache-2.0"
+keywords = ["stack", "inline", "inlinable", "sso", "string"]
+categories = ["data-structures"]
 
 [dependencies]
